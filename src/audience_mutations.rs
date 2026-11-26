@@ -1980,6 +1980,7 @@ mod tests {
                 code: Some(100),
                 message: "provider echoed raw-sensitive-marker".to_owned(),
                 retryable: false,
+                details: None,
             },
             "Verify state",
         );
