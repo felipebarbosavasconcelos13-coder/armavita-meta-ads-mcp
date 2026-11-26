@@ -25,7 +25,7 @@ use serde_json::{Map, Value, json};
 use sha2::{Digest, Sha256};
 
 use crate::{
-    error::{PublicError, ToolResponse},
+    error::{PublicError, PublicErrorDetails, ToolResponse},
     graph::GraphClient,
     meta_ids::{
         ad_account as normalize_ad_account_id, numeric_owned as normalize_numeric_id, numeric_value,
@@ -1471,6 +1471,7 @@ fn invalid_provider(message: &str) -> PublicError {
         message: message.to_owned(),
         retryable: false,
         action: Some("Check the account's audiences in Meta Ads Manager".to_owned()),
+        details: PublicErrorDetails::default(),
     }
 }
 
@@ -1725,6 +1726,7 @@ async fn ensure_audience_set_inner(
             action: Some(
                 "Run the preview again, review it, and apply its new plan_token".to_owned(),
             ),
+            details: PublicErrorDetails::default(),
         });
     }
 
