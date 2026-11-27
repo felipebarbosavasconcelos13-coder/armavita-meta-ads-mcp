@@ -3,7 +3,7 @@
 Manage Facebook, Instagram, and Threads ads from Claude Code, Codex, or another MCP-compatible assistant.
 
 We built this for fast startup, low memory use, and broad advertising coverage in one local server.
-**128 tools** cover campaigns, reporting, lead forms, catalogs, audiences, and more, with compact
+**129 tools** cover campaigns, reporting, lead forms, catalogs, audiences, and more, with compact
 responses and safeguards for sensitive changes. Related actions share tools to keep the list manageable.
 
 It runs as a single executable with no Python environment to maintain and uses Meta Marketing API v27.
