@@ -146,7 +146,8 @@ impl MetaAdsServer {
             + Self::catalog_admin_router()
             + Self::lead_forms_router()
             + Self::engagement_audiences_router()
-            + Self::access_token_router();
+            + Self::access_token_router()
+            + Self::insights_export_router();
         if let Some(enabled) = &config.toolsets {
             for tool in tool_router.list_all() {
                 if crate::toolsets::toolset_of(&tool.name)
@@ -1724,6 +1725,7 @@ mod tests {
                 "discard_mutation_plan",
                 "ensure_audience_set",
                 "estimate_audience_size",
+                "export_insights_job",
                 "generate_creative_previews",
                 "get_account_controls",
                 "get_mutation_plan",
@@ -1914,6 +1916,7 @@ mod tests {
                 | "update_custom_audience"
                 | "update_custom_conversion"
                 | "ensure_audience_set"
+                | "export_insights_job"
                 | "upsert_product" => {
                     assert_eq!(annotations.read_only_hint, Some(false));
                     assert_eq!(annotations.destructive_hint, Some(false));
@@ -1988,7 +1991,7 @@ mod tests {
         ))
         .unwrap()
         .tool_definitions();
-        assert_eq!(tools.len(), 129);
+        assert_eq!(tools.len(), 130);
 
         for tool in &tools {
             let schema = serde_json::to_value(&tool.input_schema).unwrap();
