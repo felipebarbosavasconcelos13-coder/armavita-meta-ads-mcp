@@ -55,7 +55,7 @@ jobs:
             binary: armavita-meta-ads-mcp
             archive: tar.gz
           - name: macos-arm64
-            os: macos-14
+            os: macos-latest
             target: aarch64-apple-darwin
             binary: armavita-meta-ads-mcp
             archive: tar.gz
