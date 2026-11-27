@@ -38,6 +38,8 @@ jobs:
     needs: check-version
     runs-on: ${{ matrix.os }}
     timeout-minutes: 45
+    # macOS runners are sometimes unavailable; the release then ships without it.
+    continue-on-error: ${{ matrix.optional == true }}
     strategy:
       fail-fast: false
       matrix:
@@ -59,6 +61,7 @@ jobs:
             target: aarch64-apple-darwin
             binary: armavita-meta-ads-mcp
             archive: tar.gz
+            optional: true
     steps:
       - uses: actions/checkout@v4
         with:
@@ -100,7 +103,9 @@ jobs:
 
   publish:
     name: Publish release
-    needs: build
+    needs: [check-version, build]
+    # Publish even when the optional macOS build could not get a runner.
+    if: ${{ always() && needs.check-version.result == 'success' }}
     runs-on: ubuntu-24.04
     steps:
       - uses: actions/checkout@v4
@@ -110,6 +115,10 @@ jobs:
         with:
           path: dist
           merge-multiple: true
+      - name: Require the Windows and Linux builds
+        run: |
+          ls dist
+          ls dist/*-windows-x64.zip dist/*-linux-x64.tar.gz
       - name: Checksums
         run: |
           cd dist
@@ -126,7 +135,11 @@ jobs:
             echo
             echo "- Windows x64: \`*-windows-x64.zip\`"
             echo "- Linux x64 (glibc 2.35+): \`*-linux-x64.tar.gz\`"
-            echo "- macOS Apple Silicon: \`*-macos-arm64.tar.gz\`"
+            if ls dist/*-macos-arm64.tar.gz > /dev/null 2>&1; then
+              echo "- macOS Apple Silicon: \`*-macos-arm64.tar.gz\`"
+            else
+              echo "- macOS: compile a partir do código (veja o guia); o runner de macOS do GitHub não estava disponível nesta build."
+            fi
             echo
             echo "Guia de instalação em português: [docs/INSTALACAO.md](https://github.com/${GITHUB_REPOSITORY}/blob/${GITHUB_REF_NAME}/docs/INSTALACAO.md). Confira o download com \`SHA256SUMS\`."
             echo
