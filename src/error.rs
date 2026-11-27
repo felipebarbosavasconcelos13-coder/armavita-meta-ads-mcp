@@ -153,6 +153,7 @@ impl PublicError {
             message: format!("Internal consistency check failed: {context}"),
             retryable: false,
             action: Some("Report this to the server maintainers with the tool name".to_owned()),
+            details: PublicErrorDetails::default(),
         }
     }
 }
