@@ -1,5 +1,9 @@
 # ArmaVita Meta Ads MCP
 
+> **Fork build:** ready-to-run binaries for Windows, Linux and macOS are on this fork's
+> [Releases](https://github.com/felipebarbosavasconcelos13-coder/armavita-meta-ads-mcp/releases);
+> the installation guide in Portuguese is [docs/INSTALACAO.md](docs/INSTALACAO.md).
+
 Manage Facebook, Instagram, and Threads ads from Claude Code, Codex, or another MCP-compatible assistant.
 
 We built this for fast startup, low memory use, and broad advertising coverage in one local server.
