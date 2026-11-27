@@ -118,13 +118,15 @@ pub(crate) fn toolset_of(tool: &str) -> Option<Toolset> {
         | "search_geo_locations"
         | "estimate_audience_size"
         | "query_targeting"
-        | "inspect_access_token" => Core,
+        | "inspect_access_token"
+        | "batch_read" => Core,
         "list_insights"
         | "create_insights_job"
         | "read_insights_job"
         | "read_insights_job_results"
         | "create_report"
-        | "list_ad_custom_derived_metrics" => Insights,
+        | "list_ad_custom_derived_metrics"
+        | "export_insights_job" => Insights,
         "list_custom_audiences"
         | "read_custom_audience"
         | "create_custom_audience"

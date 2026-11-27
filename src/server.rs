@@ -147,7 +147,8 @@ impl MetaAdsServer {
             + Self::lead_forms_router()
             + Self::engagement_audiences_router()
             + Self::access_token_router()
-            + Self::insights_export_router();
+            + Self::insights_export_router()
+            + Self::batch_read_router();
         if let Some(enabled) = &config.toolsets {
             for tool in tool_router.list_all() {
                 if crate::toolsets::toolset_of(&tool.name)
@@ -1692,6 +1693,7 @@ mod tests {
                 "audit_audiences",
                 "batch_catalog_items",
                 "batch_products",
+                "batch_read",
                 "build_mutation_plan",
                 "change_ad_labels",
                 "clone_ad",
@@ -1991,7 +1993,7 @@ mod tests {
         ))
         .unwrap()
         .tool_definitions();
-        assert_eq!(tools.len(), 130);
+        assert_eq!(tools.len(), 131);
 
         for tool in &tools {
             let schema = serde_json::to_value(&tool.input_schema).unwrap();
