@@ -52,6 +52,8 @@ pub struct MetaConfig {
     pub(crate) media_root: Option<PathBuf>,
     /// When set, every Graph request carries `appsecret_proof` (opt-in).
     pub(crate) appsecret_proof: Option<AppSecret>,
+    /// Tool groups to expose; `None` exposes every tool.
+    pub(crate) toolsets: Option<std::collections::BTreeSet<crate::toolsets::Toolset>>,
 }
 
 #[derive(Clone, Copy, Debug, Eq, PartialEq)]
@@ -84,6 +86,10 @@ impl MetaConfig {
             env::var(APPSECRET_PROOF_ENV).ok(),
             env::var(APP_SECRET_ENV).ok(),
         )?;
+        let toolsets = crate::toolsets::parse_toolsets(
+            env::var(crate::toolsets::TOOLSETS_ENV).ok().as_deref(),
+        )
+        .map_err(ConfigError::Toolsets)?;
 
         Ok(Self {
             api_base: format!("https://graph.facebook.com/{DEFAULT_GRAPH_API_VERSION}"),
@@ -91,6 +97,7 @@ impl MetaConfig {
             token_origin,
             media_root,
             appsecret_proof,
+            toolsets,
         })
     }
 
@@ -102,12 +109,19 @@ impl MetaConfig {
             token_origin: access_token.map(|_| TokenOrigin::Environment),
             media_root: None,
             appsecret_proof: None,
+            toolsets: None,
         }
     }
 
     #[cfg(test)]
     pub(crate) fn with_appsecret_proof(mut self, secret: &str) -> Self {
         self.appsecret_proof = Some(AppSecret(secret.to_owned()));
+        self
+    }
+
+    #[cfg(test)]
+    pub(crate) fn with_toolsets(mut self, raw: &str) -> Self {
+        self.toolsets = crate::toolsets::parse_toolsets(Some(raw)).unwrap();
         self
     }
 }
@@ -157,6 +171,8 @@ pub enum ConfigError {
     MediaRoot,
     #[error("META_APPSECRET_PROOF is on but META_APP_SECRET is missing or malformed")]
     AppSecretProof,
+    #[error("META_ADS_TOOLSETS names an unknown toolset `{0}`; use all, or a list of: {names}", names = crate::toolsets::toolset_names())]
+    Toolsets(String),
 }
 
 #[cfg(test)]
